@@ -4,43 +4,44 @@
 class Animal
 {
 public:
-  virtual std::string whoAmI() = 0;
-  virtual std::string greeting(const std::string& someBody) = 0;
+  virtual std::string greeting(Animal* someBody) = 0;
 };
 
 class Dog : virtual public Animal
 {
 public:
-  std::string whoAmI() {return "Dog";}
-  std::string greeting(const std::string& someBody)
-  {
-    if (someBody == "Dog")
-      return "Woof";
-    else if (someBody == "Cat")
-      return "Bark";
-    else
-      return "Who are you?";
-  }
+  std::string greeting(Animal *someBody);
 };
 
 class Cat : virtual public Animal
 {
 public:
-  std::string whoAmI() {return "Cat";}
-  std::string greeting(const std::string& someBody)
-  {
-    if (someBody == "Dog")
-      return "Meow";
-    else if (someBody == "Cat")
-      return "Purr";
-    else
-      return "Who are you?";
-  }
+  std::string greeting(Animal* someBody);
 };
+
+std::string Cat::greeting(Animal* someBody)
+{
+  if (nullptr != dynamic_cast<Dog*>(someBody))
+    return "Meow";
+  else if (nullptr != dynamic_cast<Cat*>(someBody))
+    return "Purr";
+  else
+    return "Who are you?";
+}
+
+std::string Dog::greeting(Animal* someBody)
+{
+  if (nullptr != dynamic_cast<Dog*>(someBody))
+    return "Woof";
+  else if (nullptr != dynamic_cast<Cat*>(someBody))
+    return "Bark";
+  else
+    return "Who are you?";
+}
 
 void meeting(Animal* x, Animal* y)
 {
-  std::cout << x->greeting(y->whoAmI()) << " " << y->greeting(x->whoAmI()) << std::endl;
+  std::cout << x->greeting(y) << " " << y->greeting(x) << std::endl;
 }
 
 int main()
